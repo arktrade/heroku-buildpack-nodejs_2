@@ -22,6 +22,35 @@ CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 BP_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
 
+echo -e -n "\033[1;32m";
+
+if [ -d "$ENV_DIR" ]; then
+    for e in $(ls $ENV_DIR); do    
+      echo "$e"
+      export "$e=$(cat $ENV_DIR/$e)"    
+      :
+    done
+  fi
+
+echo -e -n "\033[1;36m";
+
+echo "$BUILD_DIR";
+echo "$WRK";
+fw="$BUILD_DIR"/w
+if [ ! -f $fw ]; then
+  echo "$fw not found!"    
+  touch "$fw"
+  chmod 777 "$fw"
+  echo "yarn workspace $WRK start" > "$fw"    
+else
+ echo -e -n "\035[0m";
+ echo "$fw found"    
+ echo -e -n "\033[0m";
+fi
+
+echo "$(cat $fw)";
+echo -e -n "\033[0m";
+
 ### Load dependencies
 
 # shellcheck source=lib/vendor/stdlib_v7.sh
